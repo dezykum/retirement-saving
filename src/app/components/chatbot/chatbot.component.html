@@ -1,0 +1,104 @@
+<div>
+    <div class="chat-box" id="opa-block"  *ngIf="this.state=='inactive'" (click)="toggleChatBot(true)">
+    <div class="bot-logo-container" >
+      <img src="../../assets/images/chat-icon-banking.svg" />
+    </div>
+    </div>
+    <div class="bot-position" [@enterAnimation]="state" >
+      <div class="header" *ngIf="state=='active'">
+          <img class="logo-chat" src="../../assets/images/chat-window-logo-banking.svg" />
+        <!-- <span class="title">Mortgage Concierge</span> -->
+        <span class="chatbotIcons">
+          <span class="minimize" (click)="minimizeChatBot(false)">
+            <img  src="../../assets/images/minimise-icon-default.png">
+          </span>
+          <span class="close" (click)="toggleChatBot(false)">
+            <img  src="../../assets/images/close-icon-default.png">
+          </span>
+      </span>
+      </div>
+      <div class="chatbot px-3 py-4" *ngIf="state=='active'">
+        <div class="chatbot__conversation" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+  
+          <div *ngFor="let chat of chatConversation; let i = index">
+            <div class="chatbot__chat {{chat.from}}">
+              <!-- <img class="avatar" src="../../assets/images/{{chat.from}}.png">             -->
+              <div  class="text" [innerHTML]="chat.message | safeHtml"></div>
+              
+                
+
+  
+                <div id="yesNoButtons" *ngIf="(
+               (chat.slotToElicit =='YesNoOne'  && (chat.intentName =='LostCard' || chat.intentName =='Retirement')) ||
+               (chat.slotToElicit =='YesNoTwo' && (chat.intentName =='LostCard' || chat.intentName =='Retirement'))||
+               (chat.slotToElicit =='YesNoThree' && (chat.intentName =='LostCard'))||
+               (chat.slotToElicit =='YesNoFour' && (chat.intentName =='LostCard' || chat.intentName =='Retirement'))||
+               (chat.slotToElicit =='YesNoFive' && (chat.intentName =='LostCard'))||
+               (chat.slotToElicit =='YesNoSix' && (chat.intentName =='LostCard'))||
+               (chat.slotToElicit =='YesNoSeven' &&  (chat.intentName =='LostCard' ))||
+               (chat.slotToElicit =='Address' && chat.intentName =='LostCard')||
+               (chat.slotToElicit =='NoDetailOne' && chat.intentName =='LostCard')||
+               (chat.slotToElicit =='NoDetailTwo' && chat.intentName =='LostCard'))">
+
+                <button class="btn btn-primary" *ngFor="let buttons of button" (click)="buttonClick(buttons.text)">
+                  {{buttons.text}}</button>
+                </div>
+                <div id="test" *ngIf="chat.intentName=='defaultIntent'">
+                  <button class="btn btn-primary" *ngFor="let buttons of welcomebutton" (click)="buttonClick1(buttons)">
+                    {{buttons.text}}</button>
+                  </div>
+
+  
+                 <div id="preButton" *ngIf="((chat.intentName =='cardIntent'))">
+                  <button class="btn btn-primary" *ngFor="let cardButtons of cardButton" (click)="cardButtonClick(cardButtons.text)" [ngStyle]="{'background-color': buttonColor2, 'color': buttonTextColor2}">
+                    {{cardButtons.text}}</button>
+                  </div>
+                 
+                  <div id="bar" *ngIf="((chat.slotToElicit =='Card' && chat.intentName =='LostCard') && i==16)">
+
+                      <div style="background-color: white; font-size:12px;">
+                          <div class="p-4">You could have earned an additional $80 in cash back over the past 6-months with the ‘Platinum’ Card!</div>
+                          
+                        <img class="carImage" src="../../assets/images/Bar.png" />
+                       
+                      </div>
+                  </div>
+                 
+
+                 <div *ngIf="(chat.intentName == 'LostCard' && chat.slotToElicit =='Day')" class="wheelOption">
+                    <div *ngFor="let radioValue of dayButton" class="radioBorder" >
+                 <input type="radio" name="{{radioValue.text}}"  (click)="radioClick1(radioValue.text)" >{{radioValue.text}}
+                     </div>
+                  </div>
+  
+  
+                  <div class="addButton" *ngIf="((chat.slotToElicit =='Addition' && chat.intentName =='AddCar'))">
+                    <button class="btn btn-primary" *ngFor="let addButtons of addButton" (click)="addButtonClick(addButtons.text)" [ngStyle]="{'background-color': buttonColor1, 'color': buttonTextColor1}">
+                      {{addButtons.text}}</button>
+                    </div>
+  
+                
+          
+            </div>
+          </div>
+        </div>
+        <div class="chatbot__input">
+          <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]="message" placeholder="Type your message" (keyDown.enter)="sendMessage(undefined, $event)" (keyDown.ArrowUp)="getMessageHistory('up')"
+              (keyDown.ArrowDown)="getMessageHistory('down')" >
+  
+            <a class="send"  (click)="sendMessage()">
+                <img  src="../../assets/images/send-icon-DF.png">
+            </a>
+            <a class="caret-up pointer" (click)="getMessageHistory('up')" *ngIf="isCaretUp">
+                <img  src="../../assets/images/showtext-icon-DF.png">
+            </a>
+            <a class="caret-down pointer" (click)="getMessageHistory('down')" *ngIf="isCaretDown">
+                <img  src="../../assets/images/showtext-icon-DF.png">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  
